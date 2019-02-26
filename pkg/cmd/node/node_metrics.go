@@ -14,7 +14,10 @@ func newCmdNodeMetrics(ctx api.Context) *cobra.Command {
 
 	cmd.AddCommand(
 		newCmdNodeMetricsDetails(ctx),
+		newCmdNodeMetricsQuery(ctx),
+		newCmdNodeMetricsSeries(ctx),
 		newCmdNodeMetricsSummary(ctx),
+		newCmdNodeMetricsValues(ctx),
 	)
 	return cmd
 }

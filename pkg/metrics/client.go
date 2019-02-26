@@ -3,6 +3,8 @@ package metrics
 import (
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
+	"net/url"
 
 	"github.com/dcos/dcos-cli/pkg/httpclient"
 )
@@ -37,4 +39,49 @@ func (c *Client) Node(mesosID string) (*Node, error) {
 	default:
 		return nil, fmt.Errorf("HTTP %d error", resp.StatusCode)
 	}
+}
+
+// Values returns the units of a certain node.
+func (c *Client) Values() (*Values, error) {
+	// https://soak113s.testing.mesosphe.re/service/monitoring/prometheus/api/v1/label/__name__/values
+	resp, err := c.http.Get("/service/monitoring/prometheus/api/v1/label/__name__/values")
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+	switch resp.StatusCode {
+	case 200:
+		var values Values
+		err = json.NewDecoder(resp.Body).Decode(&values)
+		if err != nil {
+			return nil, err
+		}
+		return &values, nil
+	default:
+		return nil, fmt.Errorf("HTTP %d error", resp.StatusCode)
+	}
+}
+
+// Query returns the units of a certain node.
+func (c *Client) Query(query string) error {
+	resp, err := c.http.Get("/service/monitoring/prometheus/api/v1/query?query=" + url.QueryEscape(query))
+	if err != nil {
+		return err
+	}
+	defer resp.Body.Close()
+	bodyBytes, _ := ioutil.ReadAll(resp.Body)
+	fmt.Println(string(bodyBytes))
+	return nil
+}
+
+// Series returns the units of a certain node.
+func (c *Client) Series() error {
+	resp, err := c.http.Get("/service/monitoring/prometheus/api/v1/series")
+	if err != nil {
+		return err
+	}
+	defer resp.Body.Close()
+	bodyBytes, _ := ioutil.ReadAll(resp.Body)
+	fmt.Println(string(bodyBytes))
+	return nil
 }

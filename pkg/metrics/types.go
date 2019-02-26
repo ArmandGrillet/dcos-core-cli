@@ -20,3 +20,9 @@ type Datapoint struct {
 	Timestamp time.Time         `json:"timestamp"`
 	Tags      map[string]string `json:"tags,omitempty"`
 }
+
+// Values represents what is returned by the Prometheus '/values' endpoint.
+type Values struct {
+	Status string   `json:"status"`
+	Data   []string `json:"data"`
+}
