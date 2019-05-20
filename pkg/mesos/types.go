@@ -173,6 +173,11 @@ type Label struct {
 	Value string `json:"value"`
 }
 
+// Tasks represents an array of Mesos tasks
+type Tasks struct {
+	Tasks []Task `json:"tasks"`
+}
+
 // Task represent a single Mesos task
 type Task struct {
 	ExecutorID  string        `json:"executor_id"`
